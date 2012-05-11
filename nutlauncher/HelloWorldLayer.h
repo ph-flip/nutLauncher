@@ -5,6 +5,8 @@
 // HelloWorldLayer
 @interface HelloWorldLayer : CCLayer
 {
+    b2Fixture *armFixture;
+    b2Body *armBody;
 	b2World* world;
 	GLESDebugDraw *m_debugDraw;
 }

@@ -66,19 +66,23 @@ enum {
         [self addChild:sprite z:-1];
         
         sprite = [CCSprite spriteWithFile:@"catapult_base_2.png"];
-        sprite.anchorPoint = CGPointMake(181.0f, FLOOR_HEIGHT);
+        sprite.anchorPoint = CGPointZero;
+        sprite.position = CGPointMake(181.0f, FLOOR_HEIGHT);
         [self addChild:sprite z:0];
         
         sprite = [CCSprite spriteWithFile:@"squirrel_1.png"];
-        sprite.anchorPoint = CGPointMake(11.0f, FLOOR_HEIGHT);
+        sprite.anchorPoint = CGPointZero;
+        sprite.position = CGPointMake(11.0f, FLOOR_HEIGHT);
         [self addChild:sprite z:0];
         
         sprite = [CCSprite spriteWithFile:@"catapult_base_1.png"];
-        sprite.anchorPoint = CGPointMake(181.0f, FLOOR_HEIGHT);
+        sprite.anchorPoint = CGPointZero;
+        sprite.position = CGPointMake(181.0f, FLOOR_HEIGHT);
         [self addChild:sprite z:9];
         
         sprite = [CCSprite spriteWithFile:@"squirrel_2.png"];
-        sprite.anchorPoint = CGPointMake(240.0f, FLOOR_HEIGHT);
+        sprite.anchorPoint = CGPointZero;
+        sprite.position = CGPointMake(240.0f, FLOOR_HEIGHT);
         [self addChild:sprite z:9];
         
         sprite = [CCSprite spriteWithFile:@"fg.png"];
@@ -94,11 +98,11 @@ enum {
 		b2PolygonShape groundBox;		
 		
 
-		groundBox.SetAsEdge(b2Vec2(0,0), b2Vec2(screenSize.width/PTM_RATIO,0));
+		groundBox.SetAsEdge(b2Vec2(0,FLOOR_HEIGHT/PTM_RATIO), b2Vec2(screenSize.width*2.0f/PTM_RATIO,FLOOR_HEIGHT));
 		groundBody->CreateFixture(&groundBox,0);
 		
 		
-		groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width/PTM_RATIO,screenSize.height/PTM_RATIO));
+		groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width*2.0/PTM_RATIO,screenSize.height/PTM_RATIO));
 		groundBody->CreateFixture(&groundBox,0);
 		
 		
@@ -109,11 +113,26 @@ enum {
 		groundBox.SetAsEdge(b2Vec2(screenSize.width/PTM_RATIO,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width/PTM_RATIO,0));
 		groundBody->CreateFixture(&groundBox,0);
 		
-		
-		
-		
 				
 		[self schedule: @selector(tick:)];
+        
+        CCSprite *arm = [CCSprite spriteWithFile:@"catapult_arm.png"];
+        [self addChild:arm z:1];
+        
+        b2BodyDef armBodyDef;
+        armBodyDef.type = b2_dynamicBody;
+        armBodyDef.linearDamping = 1;
+        armBodyDef.angularDamping = 1;
+        armBodyDef.position.Set(230.0f/PTM_RATIO,(FLOOR_HEIGHT+91.0f)/PTM_RATIO);
+        armBodyDef.userData = arm;
+        armBody = world->CreateBody(&armBodyDef);
+        
+        b2PolygonShape armBox;
+        b2FixtureDef armBoxDef;
+        armBoxDef.shape = &armBox;
+        armBoxDef.density = 0.3f;
+        armBox.SetAsBox(11.0f/PTM_RATIO, 91.0f/PTM_RATIO);
+        armFixture = armBody->CreateFixture(&armBodyDef);
 	}
 	return self;
 }
