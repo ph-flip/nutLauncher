@@ -9,6 +9,7 @@
     b2Body *armBody;
 	b2World* world;
 	GLESDebugDraw *m_debugDraw;
+    b2RevoluteJoint *armJoint;
 }
 
 +(CCScene *) scene;
